@@ -270,6 +270,7 @@ exports.handle = function handle(client) {
 	    greeting: 'greetingStream',
 	    goodbye: 'goodbyeStream',
 	    ask_trending_book: 'trendingStream',
+	    looking_for_gift: 'similarStream',
 	    liked_book: 'similarStream',
 	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
