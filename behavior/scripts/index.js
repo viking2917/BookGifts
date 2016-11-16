@@ -284,13 +284,15 @@ exports.handle = function handle(client) {
     
     const askIfGift = client.createStep({
 	satisfied() {
+	    console.log('checking to see if askIfGift is satisfied');
+	    //return Boolean(client.getConversationState().giftOrPersonal)
 	    return false
 	},
 	
 	prompt() {
 	    client.addResponse('app:response:name:welcome')
 	    client.addResponse('app:response:name:askgift')
-	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
+	    // client.expect('collectInterestsStream', ['looking_for_gift'])  // these are streams, not message classifications.
 	    client.done()
 	}
     })
@@ -388,8 +390,8 @@ exports.handle = function handle(client) {
 	    greeting: 'greetingStream',
 	    goodbye: 'goodbyeStream',
 	    ask_trending_book: 'trendingStream',
-// 	    looking_for_gift: 'askForInterests',
-	    // looking_for_gift: 'provideBookonInterests',
+ 	    //looking_for_gift: 'collectInterestsStream',
+	    //looking_for_gift: 'provideBookonInterests',
 	    liked_book: 'similarStream',
 	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
@@ -400,7 +402,12 @@ exports.handle = function handle(client) {
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    greetingStream: [askIfGift, collectInterests, provideBookonInterests],
+	    //greetingStream: [askIfGift, collectInterests, provideBookonInterests],
+	    // collectInterestsStream: collectInterests,
+	    
+	    greetingStream: [askIfGift, collectInterests],
+	    
+
 	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,
 	    trendingStream: provideTrendingBook,
