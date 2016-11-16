@@ -220,6 +220,20 @@ exports.handle = function handle(client) {
 	},
     })
 
+    const sendGreeting = client.createStep({
+	satisfied() {
+	    return Boolean(client.getConversationState().greetingSent)
+	},
+	
+	prompt() {
+	    client.addResponse('app:response:name:welcome')
+	    client.updateConversationState({
+		greetingSent: true
+		})
+	    client.done()
+	}
+    })
+    
     const askBook = client.createStep({
 	satisfied() {
 	    return false
@@ -228,6 +242,18 @@ exports.handle = function handle(client) {
 	prompt() {
 	    client.addResponse('app:response:name:welcome')
 	    client.addResponse('app:response:name:ask_liked_book')
+	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
+	    client.done()
+	}
+    })
+    
+    const askInterests = client.createStep({
+	satisfied() {
+	    return false
+	},
+	
+	prompt() {
+	    client.addResponse('app:response:name:askgift')
 	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
 	    client.done()
 	}
@@ -281,7 +307,7 @@ exports.handle = function handle(client) {
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    greetingStream: [askBook],
+	    greetingStream: [sendGreeting, askInterests],
 	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,
 	    trendingStream: provideTrendingBook,
