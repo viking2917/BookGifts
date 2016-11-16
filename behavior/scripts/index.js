@@ -253,6 +253,8 @@ exports.handle = function handle(client) {
 	},
 	
 	prompt() {
+	    client.addResponse('app:response:name:welcome')
+	    client.done()
 	    client.addResponse('app:response:name:askgift')
 	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
 	    client.done()
@@ -307,7 +309,7 @@ exports.handle = function handle(client) {
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    greetingStream: [sendGreeting, askInterests],
+	    greetingStream: [askInterests],
 	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,
 	    trendingStream: provideTrendingBook,
