@@ -35,8 +35,56 @@ exports.handle = function handle(client) {
 		greetingSent: true
 	    })
 	    client.done()
+	    return 'init.proceed' // `next` from this step will get called
 	}
     })
+
+    const checkIfGift = client.createStep({
+	satisfied() {
+	    return (typeof client.getConversationState().isGift !== 'undefined')
+	},
+
+	next() {
+	    const isGift = client.getConversationState().isGift
+	    if (isGift === true) {
+		return 'gift'
+	    } else if (isGift === false) {
+		return 'personal'
+	    }
+	},
+	
+	prompt() {
+	    let baseClassification = client.getMessagePart().classification.base_type.value
+	    if (baseClassification === 'looking_for_gift') {
+		console('setting')
+		client.updateConversationState({
+		    isGift: true,
+		})
+		return 'init.proceed' // `next` from this step will get called
+	    } else if (baseClassification === 'looking_for_myself') {
+		console('setting')
+		client.updateConversationState({
+		    isGift: false,
+		})
+		return 'init.proceed' // `next` from this step will get called
+	    }
+	    
+	    //client.addResponse('ask_over_eighteen')
+	    // if(!Boolean(client.getConversationState().greetingSent)){
+	    // 	client.addResponse('app:response:name:welcome')
+	    // }
+
+	    client.addTextResponse('why not?')
+	    client.addResponse('app:response:name:askgift')
+
+	    // If the next message is a 'decline', like 'don't know'
+	    // or an 'affirmative', like 'yeah', or 'that's right'
+	    // then the current stream will be returned to
+//	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
+	    client.done()
+	}
+    })
+
 
     const provideHelp = client.createStep({
 	satisfied() {
@@ -253,62 +301,21 @@ exports.handle = function handle(client) {
 	
 	prompt() {
 
-	    if(!Boolean(client.getConversationState().greetingSent)){
-		client.addResponse('app:response:name:welcome')
-	    }
+	    // if(!Boolean(client.getConversationState().greetingSent)){
+	    // 	client.addResponse('app:response:name:welcome')
+	    // }
 	    client.addResponse('app:response:name:ask_liked_book')
 	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
 	    client.done()
 	}
     })
     
-    const checkIfGift = client.createStep({
-	satisfied() {
-	    return (typeof client.getConversationState().isGift !== 'undefined')
-	},
-
-	next() {
-	    const isGift = client.getConversationState().isGift
-	    if (isGift === true) {
-		return 'gift'
-	    } else if (isGift === false) {
-		return 'personal'
-	    }
-	},
-	
-	prompt() {
-	    let baseClassification = client.getMessagePart().classification.base_type.value
-	    if (baseClassification === 'looking_for_gift') {
-		client.updateConversationState({
-		    isGift: true,
-		})
-		return 'init.proceed' // `next` from this step will get called
-	    } else if (baseClassification === 'looking_for_myself') {
-		client.updateConversationState({
-		    isGift: false,
-		})
-		return 'init.proceed' // `next` from this step will get called
-	    }
-	    
-	    //client.addResponse('ask_over_eighteen')
-	    // if(!Boolean(client.getConversationState().greetingSent)){
-	    // 	client.addResponse('app:response:name:welcome')
-	    // }
-	    client.addResponse('app:response:name:askgift')
-
-	    // If the next message is a 'decline', like 'don't know'
-	    // or an 'affirmative', like 'yeah', or 'that's right'
-	    // then the current stream will be returned to
-	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
-	    client.done()
-	}
-    })
 
     const collectInterests = client.createStep({
 	satisfied() {
 	    var foo = (Boolean(client.getConversationState().interest1)||Boolean(client.getConversationState().interest2))
-	    console.log('----------------------------------------checking if collectInterests is done')
-	    console.log(foo)
+	    // console.log('----------------------------------------checking if collectInterests is done')
+	    // console.log(foo)
 
 	    return (Boolean(client.getConversationState().interest1)||Boolean(client.getConversationState().interest2))
 	},
