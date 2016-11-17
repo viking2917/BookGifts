@@ -20,15 +20,30 @@ const firstOfEntityRole = function(message, entity, role) {
 
 exports.handle = function handle(client) {
 
+    // const sayHello = client.createStep({
+    // 	satisfied() {
+    // 	    return Boolean(client.getConversationState().helloSent)
+    // 	},
+	
+    // 	prompt() {
+    // 	    client.addResponse('app:response:name:welcome')
+    // 	    client.addResponse('app:response:name:provide/documentation', {
+    // 		documentation_link: 'http://docs.init.ai',
+    // 	    })
+    // 	    client.addResponse('app:response:name:provide/instructions')
+    // 	    client.updateConversationState({
+    // 		helloSent: true
+    // 	    })
+    // 	    client.done()
+    // 	}
+    // })
+    
+
     const sendGreeting = client.createStep({
 	satisfied() {
 	    return Boolean(client.getConversationState().greetingSent)
 	},
 	
-	next() {
-	    return 'giftOrPersonal'
-	},
-
 	prompt() {
 	    client.addResponse('app:response:name:welcome')
 	    client.updateConversationState({
@@ -92,7 +107,7 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
-	    client.addTextResponse('Mahalo and Aloha til next time!')
+	    client.addTextResponse('Mahalo and Aloha!')
 	    client.done()
 	}
     })
@@ -291,9 +306,9 @@ exports.handle = function handle(client) {
 	    }
 	    
 	    //client.addResponse('ask_over_eighteen')
-	    // if(!Boolean(client.getConversationState().greetingSent)){
-	    // 	client.addResponse('app:response:name:welcome')
-	    // }
+	    if(!Boolean(client.getConversationState().greetingSent)){
+		client.addResponse('app:response:name:welcome')
+	    }
 	    client.addResponse('app:response:name:askgift')
 
 	    // If the next message is a 'decline', like 'don't know'
@@ -314,7 +329,7 @@ exports.handle = function handle(client) {
 	},
 	
 	next() {
-	    return 'provideBookonInterests'
+	    return 'provideBookonInterests';
 	},
 
 	extractInfo() {
@@ -400,21 +415,18 @@ exports.handle = function handle(client) {
 	    // map inbound message  classifications to names of streams
 	    //greeting: 'greetingStream',
 	    // goodbye: 'goodbyeStream',
-
-
-	    // ask_trending_book: 'trendingStream',
-	    // liked_book: 'similarStream',
-	    // request_for_help: 'helpStream',
-	    // turing: 'turingStream',
-	    // disagree: 'rejectRecoStream',
+	    ask_trending_book: 'trendingStream',
+	    liked_book: 'similarStream',
+	    request_for_help: 'helpStream',
+	    turing: 'turingStream',
+	    disagree: 'rejectRecoStream',
 	},
 	autoResponses: {
 	    // configure responses to be automatically sent as predicted by the machine learning model
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    main: 'sendGreetingStream', // sendGreeting,
-	    sendGreetingStream: [sendGreeting],
+	    main: 'giftOrPersonal',
 	    giftOrPersonal: [checkIfGift],
 	    gift: [collectInterests],
 	    personal: [askBook],
@@ -433,7 +445,7 @@ exports.handle = function handle(client) {
 	    //onboarding: [sayHello],
 	    
 	    // end: [untrained],
-	    //	    end: [provideHelp],
+	    end: [provideHelp],
 	}
     })
 }
