@@ -243,25 +243,28 @@ exports.handle = function handle(client) {
 	prompt(callback) {
 	    console.log('extracting slots')
 
-	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
-	    if(!interest1) interest1 = ""
-	    else interest1 = interest1.value
-	    console.log('interest1: ' + interest1)
+	    var interest1 = client.getConversationState().interest1;
+	    var interest2 = client.getConversationState().interest2;
+	    var interest3 = client.getConversationState().interest3;
 
-	    var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
-	    if(!interest2) interest2 = ""
-	    else interest2 = interest2.value
-	    console.log('interest2: ' + interest2)
+	    // if(!interest1) interest1 = ""
+	    // else interest1 = interest1.value
+	    // console.log('interest1: ' + interest1)
 
-	    var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
-	    if(!interest3) interest3 = ""
-	    else interest3 = interest3.value
-	    console.log('interest3: ' + interest3)
+	    // var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
+	    // if(!interest2) interest2 = ""
+	    // else interest2 = interest2.value
+	    // console.log('interest2: ' + interest2)
+
+	    // var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
+	    // if(!interest3) interest3 = ""
+	    // else interest3 = interest3.value
+	    // console.log('interest3: ' + interest3)
 
 	    if(interest3) 
-		client.addTextResponse('(I think you said <' + interest1 + '>, <' + interest2 + '>, <' + interest3 + '>.')
+		client.addTextResponse('(I think you said <' + interest1 + '>, <' + interest2 + '> and <' + interest3 + '>.')
 	    else if (interest2) 
-		client.addTextResponse('(I think you said <' + interest1 + '>, <' + interest2 + '>.')
+		client.addTextResponse('(I think you said <' + interest1 + '> and <' + interest2 + '>.')
 	    else if (interest1) 
 		client.addTextResponse('(I think you said <' + interest1 + '>.')
 
@@ -282,29 +285,76 @@ exports.handle = function handle(client) {
 	}
     })
     
-    const askIfGift = client.createStep({
+    const checkIfGift = client.createStep({
 	satisfied() {
-	    console.log('checking to see if askIfGift is satisfied');
-	    //return Boolean(client.getConversationState().giftOrPersonal)
-	    return false
+	    return (typeof client.getConversationState().isGift !== 'undefined')
+	},
+
+	next() {
+	    const isGift = client.getConversationState().isGift
+	    if (isGift === true) {
+		return 'gift'
+	    } else if (isGift === false) {
+		return 'personal'
+	    }
 	},
 	
 	prompt() {
+	    let baseClassification = client.getMessagePart().classification.base_type.value
+	    if (baseClassification === 'looking_for_gift') {
+		client.updateConversationState({
+		    isGift: true,
+		})
+		return 'init.proceed' // `next` from this step will get called
+	    } else if (baseClassification === 'looking_for_myself') {
+		client.updateConversationState({
+		    isGift: false,
+		})
+		return 'init.proceed' // `next` from this step will get called
+	    }
+	    
+	    //client.addResponse('ask_over_eighteen')
 	    client.addResponse('app:response:name:welcome')
 	    client.addResponse('app:response:name:askgift')
-	    // client.expect('collectInterestsStream', ['looking_for_gift'])  // these are streams, not message classifications.
+
+	    // If the next message is a 'decline', like 'don't know'
+	    // or an 'affirmative', like 'yeah', or 'that's right'
+	    // then the current stream will be returned to
+	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
 	    client.done()
 	}
     })
 
+    // const checkIfGift = client.createStep({
+    // 	satisfied() {
+    // 	    console.log('----------------------------------------checking to see if checkIfGift is satisfied');
+    // 	    //return Boolean(client.getConversationState().giftOrPersonal)
+    // 	    return false
+    // 	},
+	
+    // 	prompt() {
+    // 	    client.addResponse('app:response:name:welcome')
+    // 	    client.addResponse('app:response:name:askgift')
+    // 	    // client.expect('collectInterestsStream', ['looking_for_gift'])  // these are streams, not message classifications.
+    // 	    client.done()
+    // 	}
+    // })
+
     const collectInterests = client.createStep({
 	satisfied() {
-	    //return Boolean(client.getConversationState().weatherCity)
-	    return false
+	    var foo = Boolean(client.getConversationState().interest1)
+	    console.log('----------------------------------------checking if collectInterests is done')
+	    console.log(foo)
+
+	    return Boolean(client.getConversationState().interest1)
+	    // return false
 	},
 	
+	next() {
+	    return 'provideBookonInterests';
+	},
+
 	extractInfo() {
-	    
 	    console.log('extracting slots')
 	    
 	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
@@ -343,12 +393,10 @@ exports.handle = function handle(client) {
 	    // 	client.addTextResponse('(I think you said <' + interest1 + '>, <' + interest2 + '>.')
 	    // else if (interest1) 
 	    // 	client.addTextResponse('(I think you said <' + interest1 + '>.')
-
-	    client.done()
 	},
 	
 	prompt() {
-	    client.addResponse('app:response:name:prompt/weather_city')
+	    client.addResponse('app:response:name:request_interest_list')
 	    client.done()
 	},
     })
@@ -387,12 +435,12 @@ exports.handle = function handle(client) {
     client.runFlow({
 	classifications: {
 	    // map inbound message  classifications to names of streams
-	    greeting: 'greetingStream',
-	    goodbye: 'goodbyeStream',
-	    ask_trending_book: 'trendingStream',
+	    //greeting: 'greetingStream',
+	    // goodbye: 'goodbyeStream',
+	    // ask_trending_book: 'trendingStream',
  	    //looking_for_gift: 'collectInterestsStream',
 	    //looking_for_gift: 'provideBookonInterests',
-	    liked_book: 'similarStream',
+	    // liked_book: 'similarStream',
 	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
 	    disagree: 'rejectRecoStream',
@@ -405,8 +453,13 @@ exports.handle = function handle(client) {
 	    //greetingStream: [askIfGift, collectInterests, provideBookonInterests],
 	    // collectInterestsStream: collectInterests,
 	    
-	    greetingStream: [askIfGift, collectInterests],
-	    
+	    main: 'showContent',
+	    showContent: [checkIfGift],
+	    gift: [collectInterests],
+	    personal: [provideTrendingBook],
+	    provideBookonInterests: [provideBookonInterests],
+
+	    // greetingStream: [askIfGift, collectInterests],
 
 	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,

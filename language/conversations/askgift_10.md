@@ -12,7 +12,7 @@ gift
 < What kinds of things do they like?
 * request_interest_list
 
-[travel](Interest1), [cocktails](Interest2), [science fiction](Interest3)
+[historical fiction](Interest1), [cocktails](Interest2) and [quilting](Interest3)
 * provide_interest_list
 
 

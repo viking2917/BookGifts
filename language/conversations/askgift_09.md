@@ -1,5 +1,5 @@
 ---
-title: askgift_08
+title: askgift_09
 timestamp: 2016-10-19T17:07:48.259701964-04:05
 ---
 
@@ -9,10 +9,10 @@ timestamp: 2016-10-19T17:07:48.259701964-04:05
 gift
 * looking_for_gift
 
-< What kinds of things do they like?
+< What kinds of things are they interested in?
 * request_interest_list
 
-[travel](Interest1), [cocktails](Interest2), [science fiction](Interest3)
+[hiking](Interest1), [food](Interest2), [cocktails](Interest3)
 * provide_interest_list
 
 

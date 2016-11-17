@@ -9,10 +9,10 @@ timestamp: 2016-10-19T17:07:48.259701964-04:05
 gift
 * looking_for_gift
 
-< What kinds of things do they like?
+< What is she interested in?
 * request_interest_list
 
-[travel](Interest1), [cocktails](Interest2), [science fiction](Interest3)
+She's interested in [politics](Interest1). She loves [quilting](Interest2) and [golf](Interest3)
 * provide_interest_list
 
 
