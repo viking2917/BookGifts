@@ -247,26 +247,12 @@ exports.handle = function handle(client) {
 	    var interest2 = client.getConversationState().interest2;
 	    var interest3 = client.getConversationState().interest3;
 
-	    // if(!interest1) interest1 = ""
-	    // else interest1 = interest1.value
-	    // console.log('interest1: ' + interest1)
-
-	    // var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
-	    // if(!interest2) interest2 = ""
-	    // else interest2 = interest2.value
-	    // console.log('interest2: ' + interest2)
-
-	    // var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
-	    // if(!interest3) interest3 = ""
-	    // else interest3 = interest3.value
-	    // console.log('interest3: ' + interest3)
-
 	    if(interest3) 
-		client.addTextResponse('(I think you said <' + interest1 + '>, <' + interest2 + '> and <' + interest3 + '>.')
+		client.addTextResponse('(Looking for book about <' + interest1 + '>, <' + interest2 + '> and <' + interest3 + '>.')
 	    else if (interest2) 
-		client.addTextResponse('(I think you said <' + interest1 + '> and <' + interest2 + '>.')
+		client.addTextResponse('(Looking for book about <' + interest1 + '> and <' + interest2 + '>.')
 	    else if (interest1) 
-		client.addTextResponse('(I think you said <' + interest1 + '>.')
+		client.addTextResponse('(Looking for book about <' + interest1 + '>.')
 
 	    client.done()
 	},
@@ -342,12 +328,11 @@ exports.handle = function handle(client) {
 
     const collectInterests = client.createStep({
 	satisfied() {
-	    var foo = Boolean(client.getConversationState().interest1)
+	    var foo = (Boolean(client.getConversationState().interest1)||Boolean(client.getConversationState().interest2))
 	    console.log('----------------------------------------checking if collectInterests is done')
 	    console.log(foo)
 
-	    return Boolean(client.getConversationState().interest1)
-	    // return false
+	    return (Boolean(client.getConversationState().interest1)||Boolean(client.getConversationState().interest2))
 	},
 	
 	next() {
@@ -437,10 +422,8 @@ exports.handle = function handle(client) {
 	    // map inbound message  classifications to names of streams
 	    //greeting: 'greetingStream',
 	    // goodbye: 'goodbyeStream',
-	    // ask_trending_book: 'trendingStream',
- 	    //looking_for_gift: 'collectInterestsStream',
-	    //looking_for_gift: 'provideBookonInterests',
-	    // liked_book: 'similarStream',
+	    ask_trending_book: 'trendingStream',
+	    liked_book: 'similarStream',
 	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
 	    disagree: 'rejectRecoStream',
@@ -450,11 +433,8 @@ exports.handle = function handle(client) {
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    //greetingStream: [askIfGift, collectInterests, provideBookonInterests],
-	    // collectInterestsStream: collectInterests,
-	    
-	    main: 'showContent',
-	    showContent: [checkIfGift],
+	    main: 'giftOrPersonal',
+	    giftOrPersonal: [checkIfGift],
 	    gift: [collectInterests],
 	    personal: [provideTrendingBook],
 	    provideBookonInterests: [provideBookonInterests],

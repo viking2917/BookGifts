@@ -1,5 +1,5 @@
 ---
-title: askgift_08
+title: askgift_07
 timestamp: 2016-10-19T17:07:48.259701964-04:05
 ---
 
@@ -9,10 +9,10 @@ timestamp: 2016-10-19T17:07:48.259701964-04:05
 gift
 * looking_for_gift
 
-< What is she/he interested in?
+< What kinds of books do they read?
 * request_interest_list
 
-She's interested in [politics](Interest1). She loves [quilting](Interest2) and [golf](Interest3)
+[science fiction](Interest1) and [political science](Interest2)
 * provide_interest_list
 
 

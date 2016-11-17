@@ -12,7 +12,7 @@ gift
 < What kinds of things are they interested in?
 * request_interest_list
 
-[hiking](Interest1), [food](Interest2), [cocktails](Interest3)
+[hiking](Interest1), [food](Interest2), and [cocktails](Interest3)
 * provide_interest_list
 
 
