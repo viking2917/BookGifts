@@ -10,12 +10,12 @@ var striptags = require('striptags');
 // process._debugProcess(process.pid); debugger;
 
 const firstOfEntityRole = function(message, entity, role) {
-  role = role || 'generic';
-  const slots = message.slots
-  const entityValues = message.slots[entity]
-  const valsForRole = entityValues ? entityValues.values_by_role[role] : null
+    role = role || 'generic';
+    const slots = message.slots
+    const entityValues = message.slots[entity]
+    const valsForRole = entityValues ? entityValues.values_by_role[role] : null
 
-  return valsForRole ? valsForRole[0] : null
+    return valsForRole ? valsForRole[0] : null
 }
 
 exports.handle = function handle(client) {
@@ -30,12 +30,11 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
-	    client.addTextResponse('sending welcome!')
 	    client.addResponse('app:response:name:welcome')
 	    client.updateConversationState({
 		greetingSent: true
 	    })
-	    // client.done()
+
 	    return 'init.proceed' // `next` from this step will get called
 	}
     })
@@ -83,7 +82,7 @@ exports.handle = function handle(client) {
 
 
 	    // maybe need this?
-//	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
+	    //	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
 
 
 
@@ -291,84 +290,6 @@ exports.handle = function handle(client) {
 		}
 
 		client.addTextResponse(response)
-
-
-	    // 	client.addTextResponse('(Looking for book about <' + interest1 + '>, <' + interest2 + '> and <' + interest3 + '>.')
-	    // else if (interest2) 
-	    // 	client.addTextResponse('(Looking for book about <' + interest1 + '> and <' + interest2 + '>.')
-	    // else if (interest1) 
-	    // 	client.addTextResponse('(Looking for book about <' + interest1 + '>.')
-
-		// getSimilar(bookTitle, bookAuthor, resultBody => {
-		//     if (!resultBody) {
-		// 	console.log('Error getting trending book.')
-		// 	client.addResponse('app:response:name:apology/untrained')
-		// 	client.done()
-		// 	callback()
-		// 	return
-		//     }
-
-		//     const theBook = resultBody;
-		//     setClientCache.recordBookRead(client, theBook)
-
-		//     const relBook1 = resultBody.relatedbooks[0];
-		//     const relBook2 = resultBody.relatedbooks[1];
-
-		//     const shortdesc1 = striptags(relBook1.description).substring(0,  50) + "..."
-		//     const shortdesc2 = striptags(relBook2.description).substring(0, 50) + "..."
-
-		//     console.log(relBook1)
-		//     const bookData1 = {
-		// 	BookTitle: relBook1.title,
-		// 	AuthorName: relBook1.authorstring,
-		// 	BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(relBook1.title,relBook1.authorstring,relBook1.bookid),
-		//     }
-		//     const bookData2 = {
-		// 	BookTitle: relBook2.title,
-		// 	AuthorName: relBook2.authorstring,
-		// 	BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(relBook2.title,relBook2.authorstring,relBook2.bookid),
-		//     }
-
-		//     console.log('sending book data:', bookData1)
-		//     console.log('sending book data:', bookData2)
-		//     setClientCache.recordBookSent(client, relBook1)
-		//     setClientCache.recordBookSent(client, relBook2)
-		//     // client.addTextResponse('(I think you said ' + bookTitle + ' by ' + bookAuthor + '.)')
-		//     client.addTextResponse('(I think you typed a title of <' + bookTitle + '> and an author of <' + bookAuthor + '> so I assume you meant ' + resultBody.title + ' by ' + resultBody.authorstring + '.)')
-		//     client.addResponse('app:response:name:provide_response_recommendation', bookData1)
-		//     client.addImageResponse( relBook1.coverarturl, 'The product')
-
-		//     client.addCarouselListResponse({
-		// 	items: [
-		// 	    {
-		// 		'media_url': relBook1.coverarturl,
-		// 		'media_type': 'image/jpeg', 
-		// 		'description': shortdesc1,
-		// 		title: relBook1.title.substring(0,78),
-		// 		actions: [
-		// 		    {
-		// 			type: 'link',
-		// 			text: 'See More',
-		// 			uri: bookData1.BookLink,
-		// 		    },
-		// 		],
-		// 	    },
-		// 	    {
-		// 		'media_url': relBook2.coverarturl,
-		// 		'media_type': 'image/jpeg', 
-		// 		'description': shortdesc2,
-		// 		title: relBook2.title.substring(0,78),
-		// 		actions: [
-		// 		    {
-		// 			type: 'link',
-		// 			text: 'See More',
-		// 			uri: bookData2.BookLink,
-		// 		    },
-		// 		],
-		// 	    },
-		// 	],
-		//     })
-
 		client.done()
 	    }
 	},

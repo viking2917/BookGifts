@@ -8,9 +8,3 @@ Hi, I'm looking for gift book ideas.
 
 < Aloha Human!
 * welcome
-
-< The person getting the book, what kinds of things are they interested in?
-* askgift
-
-They liked [Gone with the Wind](BookTitle) by [Frank Herbert](AuthorName)
-* liked_book
