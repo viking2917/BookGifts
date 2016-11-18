@@ -26,7 +26,7 @@ exports.handle = function handle(client) {
 	},
 	
 	next() {
-	    return 'giftOrPersonal'
+	    return 'giftOrPersonalStream'
 	},
 
 	prompt() {
@@ -34,12 +34,12 @@ exports.handle = function handle(client) {
 	    client.updateConversationState({
 		greetingSent: true
 	    })
-	    client.done()
+	    // client.done()
 	    return 'init.proceed' // `next` from this step will get called
 	}
     })
 
-    const checkIfGift = client.createStep({
+    const giftOrPersonal = client.createStep({
 	satisfied() {
 	    return (typeof client.getConversationState().isGift !== 'undefined')
 	},
@@ -420,9 +420,9 @@ exports.handle = function handle(client) {
 	    //provide_popular_book: 'getTrending',
 	},
 	streams: {
-	    main: 'sendGreetingStream', // sendGreeting,
+	    main: 'sendGreetingStream', 
 	    sendGreetingStream: [sendGreeting],
-	    giftOrPersonal: [checkIfGift],
+	    giftOrPersonalStream: [giftOrPersonal],
 	    gift: [collectInterests],
 	    personal: [askBook],
 	    provideBookonInterests: [provideBookonInterests],
@@ -440,7 +440,7 @@ exports.handle = function handle(client) {
 	    //onboarding: [sayHello],
 	    
 	    // end: [untrained],
-	    //	    end: [provideHelp],
+	    end: [provideHelp],
 	}
     })
 }
