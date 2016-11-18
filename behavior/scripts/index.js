@@ -3,6 +3,7 @@
 const urlTools = require('./lib/urls')
 const getTrending = require('./lib/getTrending')
 const getSimilar = require('./lib/getSimilar')
+const getBooksInterests = require('./lib/getBooksInterests')
 const setClientCache = require('./lib/setClientCache')
 
 var striptags = require('striptags');
@@ -283,13 +284,106 @@ exports.handle = function handle(client) {
 
 	    var interests = client.getConversationState().interests;
 	    if(interests) {
-		var response = '(Looking for book about '
+		var response = '(Looking for books about '
+		// clean this up.
 		for(var i=0; i<interests.length; i++) {
 		    console.log('interest ' + i + ': ' + interests[i]);
 		    response += '<' + interests[i] + '>, '
 		}
 
 		client.addTextResponse(response)
+
+
+		
+		getBooksInterests(interests, resultBody => {
+		    if (!resultBody) {
+			console.log('Error getting trending book.')
+			client.addResponse('app:response:name:apology/untrained')
+			client.done()
+			callback()
+			return
+		    }
+
+
+		// const bookData = {
+		//     BookTitle: resultBody.books[0].title,
+		//     AuthorName: resultBody.books[0].authorstring,
+		//     BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
+		// }
+
+		// console.log('sending book data:', bookData)
+		// setClientCache.recordBookSent(client, resultBody.books[0])
+		// client.addResponse('app:response:name:provide_popular_book', bookData)
+		// client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
+
+		    // how about x or y? 
+
+		    const theBook = resultBody;
+		    const book1 = resultBody.books[0];
+		    const book2 = resultBody.books[1];
+		    const shortdesc1 = striptags(book1.description).substring(0, 50) + "..."
+		    const shortdesc2 = striptags(book2.description).substring(0, 50) + "..."
+
+		    console.log(book1)
+		    console.log(book2)
+		    const bookData1 = {
+			BookTitle: book1.title,
+			AuthorName: book1.authorstring,
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(book1.title,book1.authorstring,book1.bookid),
+		    }
+		    const bookData2 = {
+			BookTitle: book2.title,
+			AuthorName: book2.authorstring,
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(book2.title,book2.authorstring,book2.bookid),
+		    }
+
+		    console.log('sending book data:', bookData1)
+		    console.log('sending book data:', bookData2)
+		    setClientCache.recordBookSent(client, book1)
+		    setClientCache.recordBookSent(client, book2)
+		    client.addResponse('app:response:name:provide_response_recommendation', bookData1)
+// 		    client.addImageResponse( book1.coverarturl, 'The product')
+
+		    client.addTextResponse('and some other choices:')
+
+		    client.addCarouselListResponse({
+			items: [
+			    {
+				'media_url': book1.coverarturl,
+				'media_type': 'image/jpeg', 
+				'description': shortdesc1,
+				title: book1.title.substring(0,78),
+				actions: [
+				    {
+					type: 'link',
+					text: 'Details',
+					uri: bookData1.BookLink,
+				    },
+				],
+			    },
+			    {
+				'media_url': book2.coverarturl,
+				'media_type': 'image/jpeg', 
+				'description': shortdesc2,
+				title: book2.title.substring(0,78),
+				actions: [
+				    {
+					type: 'link',
+					text: 'Details',
+					uri: bookData2.BookLink,
+				    },
+				],
+			    },
+			],
+		    })
+
+		})
+
+
+
+
+
+
 		client.done()
 	    }
 	},

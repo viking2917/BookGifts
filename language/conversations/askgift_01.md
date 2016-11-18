@@ -15,4 +15,5 @@ A gift.
 He likes [rugby](Interest1) and [startups](Interest2)
 * provide_interest_list
 
-
+< Gotcha. How about [The Girl with the Dragon Tattoo: A new series ](BookTitle) by [Stieg Larsson ](AuthorName)? More: [https://www.thehawaiiproject.com/book/A-Game-of-Thrones--by--George-R.R.-Martin--20623](BookLink)
+* provide_response_recommendation

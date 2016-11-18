@@ -60,12 +60,19 @@ module.exports = {
 
 	state = client.getConversationState()
 	var interests = state.interests;
-	interests.push(interest)
-	console.log('updated interests')
 
-	client.updateConversationState({
-	    interests: interests
-	})
+	console.log(interest)
+	console.log(interests)
+	console.log(interests.indexOf(interest))
+
+	if(interests.indexOf(interest) < 0) {
+	    interests.push(interest)
+	    console.log('updated interests')
+	    
+	    client.updateConversationState({
+		interests: interests
+	    })
+	}
     },
 
 }

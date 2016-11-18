@@ -15,5 +15,7 @@ I'm looking for a gift
 [quilting] (Interest1) and [travel](Interest2)
 * provide_interest_list
 
+< Cool. How about [Stranger in a  Strange Land](BookTitle) by [Heinlein](AuthorName)? More: [https://www.thehawaiiproject.com/book/A-Game-of-Thrones--by--George-R.R.-Martin--20623](BookLink)
+* provide_response_recommendation
 
 
