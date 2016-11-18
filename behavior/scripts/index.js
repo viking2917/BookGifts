@@ -44,7 +44,8 @@ exports.handle = function handle(client) {
 
     const startOver = client.createStep({
 	satisfied() {
-	    return false
+	    return (client.getConversationState().isGift === -1)
+	    //return false
 	},
 	
 	next() {
@@ -52,16 +53,28 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
-	    client.addTextResponse('OK, let\'s start over')
-	    client.updateConversationState({state: {}})
+	    console.log('starting over')
+	    client.updateConversationState({ isGift: -1})
 	    client.updateConversationState({ greetingSent: true })
+	    client.updateConversationState({ interests: []})
+	    client.updateConversationState({ sentBooks: []})
+	    client.updateConversationState({ readBooks: []})
+	    console.log(client.getConversationState())
+
+	    client.addTextResponse('OK, let\'s start over')
+	    // client.updateConversationState({state: {}})
 	    return 'init.proceed' // `next` from this step will get called
 	}
     })
 
     const giftOrPersonal = client.createStep({
 	satisfied() {
-	    return (typeof client.getConversationState().isGift !== 'undefined')
+	    console.log('checking gift satisfied')
+	    console.log(client.getConversationState())
+	    var foo = (client.getConversationState().isGift === false) || (client.getConversationState().isGift === true)
+	    // ((typeof client.getConversationState().isGift !== 'undefined') || (client.getConversationState().isGift == -2))
+	    console.log('returning: ' + foo)
+	    return foo
 	},
 
 	next() {
@@ -74,6 +87,7 @@ exports.handle = function handle(client) {
 	},
 	
 	prompt() {
+	    console.log('doing giftOrPersonal prompt')
 	    let baseClassification = client.getMessagePart().classification.base_type.value
 	    if (baseClassification === 'looking_for_gift') {
 		console.log('setting')
@@ -93,7 +107,7 @@ exports.handle = function handle(client) {
 	    // if(!Boolean(client.getConversationState().greetingSent)){
 	    // 	client.addResponse('app:response:name:welcome')
 	    // }
-
+	    console.log('asking question')
 	    client.addResponse('app:response:name:askgift')
 
 	    // If the next message is a 'decline', like 'don't know'
@@ -192,7 +206,7 @@ exports.handle = function handle(client) {
 		console.log('sending book data:', bookData)
 		setClientCache.recordBookSent(client, resultBody.books[0])
 		client.addResponse('app:response:name:provide_popular_book', bookData)
-		client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
+		// client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
 		client.done()
 		callback()
 	    })
@@ -253,7 +267,7 @@ exports.handle = function handle(client) {
 		// client.addTextResponse('(I think you said ' + bookTitle + ' by ' + bookAuthor + '.)')
 		client.addTextResponse('(I think you typed a title of <' + bookTitle + '> and an author of <' + bookAuthor + '> so I assume you meant ' + resultBody.title + ' by ' + resultBody.authorstring + '.)')
 		client.addResponse('app:response:name:provide_response_recommendation', bookData1)
-		client.addImageResponse( relBook1.coverarturl, 'The product')
+		// client.addImageResponse( relBook1.coverarturl, 'The product')
 
 		client.addCarouselListResponse({
 		    items: [
@@ -430,26 +444,28 @@ exports.handle = function handle(client) {
 	    // 	client.updateConversationState({  new_interests_found: true })
 	    // }
 		    
-	    if(client.getConversationState().interests) {
+	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
+	    var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
+	    var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
+
+	    // this step is re-entrant. if they ask for more recommendations, don't flush the interest set unless we find new ones.
+	    if(client.getConversationState().interests && (interest1||interest2||interest3)) {
 		console.log('resetting interests')
 		setClientCache.clearInterests(client)
 	    }
 	    
-	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
 	    if(interest1) { 
 		interest1 = interest1.value
 		console.log('interest1: ' + interest1)
 		setClientCache.recordInterest(client, interest1)
 	    }
 
-	    var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
 	    if(interest2) {
 		interest2 = interest2.value
 		console.log('interest2: ' + interest2)
 		setClientCache.recordInterest(client, interest2)
 	    }
 
-	    var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
 	    if(interest3) {
 		interest3 = interest3.value
 		console.log('interest3: ' + interest3)
@@ -500,7 +516,9 @@ exports.handle = function handle(client) {
 	    //greeting: 'greetingStream',
 	    // goodbye: 'goodbyeStream',
 
-	    request_start_over: 'startOver',
+	    request_start_over: 'startOverStream',
+	    goodbye: 'startOverStream',
+
 	    ask_trending_book: 'trendingStream',
 	    liked_book: 'similarStream',
 	    // request_for_help: 'helpStream',
@@ -520,7 +538,7 @@ exports.handle = function handle(client) {
 	    provideBookonInterests: [provideBookonInterests],
 
 	    // greetingStream: [askIfGift, collectInterests],
-
+	    startOverStream: startOver,
 	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,
 	    trendingStream: provideTrendingBook,
