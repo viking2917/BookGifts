@@ -31,6 +31,8 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
+
+	    client.updateConversationState({ sentBooks: [] })
 	    client.addResponse('app:response:name:welcome')
 	    client.updateConversationState({
 		greetingSent: true
@@ -300,6 +302,9 @@ exports.handle = function handle(client) {
 	    console.log('recommending books on interests')
 
 	    var interests = client.getConversationState().interests;
+	    console.log('interests: ')
+	    console.log(interests)
+
 	    if(interests) {
 		var response = '(Looking for books about '
 		// clean this up.
@@ -310,9 +315,7 @@ exports.handle = function handle(client) {
 
 		client.addTextResponse(response)
 
-
-		
-		getBooksInterests(interests, resultBody => {
+		getBooksInterests(interests, client, resultBody => {
 		    if (!resultBody) {
 			console.log('Error getting trending book.')
 			client.addResponse('app:response:name:apology/untrained')
@@ -321,36 +324,18 @@ exports.handle = function handle(client) {
 			return
 		    }
 
-
-		// const bookData = {
-		//     BookTitle: resultBody.books[0].title,
-		//     AuthorName: resultBody.books[0].authorstring,
-		//     BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
-		// }
-
-		// console.log('sending book data:', bookData)
-		// setClientCache.recordBookSent(client, resultBody.books[0])
-		// client.addResponse('app:response:name:provide_popular_book', bookData)
-		// client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
-
-		    // how about x or y? 
-
 		    const theBook = resultBody;
 		    const book1 = resultBody.books[0];
 		    const book2 = resultBody.books[1];
 		    const shortdesc1 = striptags(book1.description).substring(0, 50) + "..."
 		    const shortdesc2 = striptags(book2.description).substring(0, 50) + "..."
 
-		    // console.log(book1)
-		    // console.log(book2)
 		    const bookData1 = {
-			BookTitle: book1.title,
-			AuthorName: book1.authorstring,
+			BookTitle: book1.title, AuthorName: book1.authorstring,
 			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book1.title,book1.authorstring,book1.bookid),
 		    }
 		    const bookData2 = {
-			BookTitle: book2.title,
-			AuthorName: book2.authorstring,
+			BookTitle: book2.title, AuthorName: book2.authorstring,
 			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book2.title,book2.authorstring,book2.bookid),
 		    }
 
@@ -359,7 +344,6 @@ exports.handle = function handle(client) {
 		    setClientCache.recordBookSent(client, book1)
 		    setClientCache.recordBookSent(client, book2)
 		    client.addResponse('app:response:name:provide_response_recommendation', bookData1)
-// 		    client.addImageResponse( book1.coverarturl, 'The product')
 
 		    client.addTextResponse(bookData1.BookTitle + ' and some other choices:')
 
@@ -393,15 +377,11 @@ exports.handle = function handle(client) {
 			    },
 			],
 		    })
+
+		    // a nope should generate more recommendations
+		    client.expect('provideBookonInterests', ['decline_recommendation'])
 		    client.done()
 		})
-
-
-
-
-
-
-
 	    }
 	},
     })

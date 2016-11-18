@@ -17,3 +17,6 @@ she's interested in [politics](Interest1) and likes [biographies](Interest2)
 
 < OK. Then how about [Gone Girl](BookTitle) by [Foo Bar](AuthorName) More: [https://www.thehawaiiproject.com/book/Gone-Firl--by--Fred-Flintstone--20623](BookLink)
 * provide_response_recommendation
+
+No
+* decline_recommendation
