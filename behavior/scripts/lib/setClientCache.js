@@ -47,5 +47,25 @@ module.exports = {
 	else {
 	    return false;
 	}
-    }
+    }, 
+
+    recordInterest: function(client, interest) {
+
+	var state = client.getConversationState()
+	if(typeof state.interests == 'undefined') {
+	 client.updateConversationState({
+	     interests: []
+	 })
+	}
+
+	state = client.getConversationState()
+	var interests = state.interests;
+	interests.push(interest)
+	console.log('updated interests')
+
+	client.updateConversationState({
+	    interests: interests
+	})
+    },
+
 }
