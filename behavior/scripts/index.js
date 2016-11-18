@@ -40,6 +40,23 @@ exports.handle = function handle(client) {
 	}
     })
 
+    const startOver = client.createStep({
+	satisfied() {
+	    return false
+	},
+	
+	next() {
+	    return 'giftOrPersonalStream'
+	},
+
+	prompt() {
+	    client.addTextResponse('OK, let\'s start over')
+	    client.updateConversationState({state: {}})
+	    client.updateConversationState({ greetingSent: true })
+	    return 'init.proceed' // `next` from this step will get called
+	}
+    })
+
     const giftOrPersonal = client.createStep({
 	satisfied() {
 	    return (typeof client.getConversationState().isGift !== 'undefined')
@@ -324,17 +341,17 @@ exports.handle = function handle(client) {
 		    const shortdesc1 = striptags(book1.description).substring(0, 50) + "..."
 		    const shortdesc2 = striptags(book2.description).substring(0, 50) + "..."
 
-		    console.log(book1)
-		    console.log(book2)
+		    // console.log(book1)
+		    // console.log(book2)
 		    const bookData1 = {
 			BookTitle: book1.title,
 			AuthorName: book1.authorstring,
-			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(book1.title,book1.authorstring,book1.bookid),
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book1.title,book1.authorstring,book1.bookid),
 		    }
 		    const bookData2 = {
 			BookTitle: book2.title,
 			AuthorName: book2.authorstring,
-			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(book2.title,book2.authorstring,book2.bookid),
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book2.title,book2.authorstring,book2.bookid),
 		    }
 
 		    console.log('sending book data:', bookData1)
@@ -344,7 +361,7 @@ exports.handle = function handle(client) {
 		    client.addResponse('app:response:name:provide_response_recommendation', bookData1)
 // 		    client.addImageResponse( book1.coverarturl, 'The product')
 
-		    client.addTextResponse('and some other choices:')
+		    client.addTextResponse(bookData1.BookTitle + ' and some other choices:')
 
 		    client.addCarouselListResponse({
 			items: [
@@ -376,7 +393,7 @@ exports.handle = function handle(client) {
 			    },
 			],
 		    })
-
+		    client.done()
 		})
 
 
@@ -384,7 +401,7 @@ exports.handle = function handle(client) {
 
 
 
-		client.done()
+
 	    }
 	},
     })
@@ -408,10 +425,15 @@ exports.handle = function handle(client) {
 
     const collectInterests = client.createStep({
 	satisfied() {
-	    var foo = Boolean(client.getConversationState().interests)
-	    // console.log('----------------------------------------checking if collectInterests is done')
-	    // console.log(foo)
-	    return foo
+
+	    var new_interests = (typeof Boolean(client.getConversationState().new_interests_found))
+	    var interests = client.getConversationState().interests
+	    var any_interests = (typeof interests !== 'undefined') && Boolean(interests.length)
+
+	    console.log('----------------------------------------checking if collectInterests is done')
+	    console.log( any_interests && !new_interests)
+	    return (any_interests && new_interests)
+	    // return false;
 	},
 	
 	next() {
@@ -420,6 +442,18 @@ exports.handle = function handle(client) {
 
 	extractInfo() {
 	    console.log('extracting interests')
+	    
+	    // are there pre-existing interests? If so record that so we don't satisfy this step
+	    client.updateConversationState({  new_interests_found: false })
+	    // if( (typeof client.getConversationState().interests !== 'undefined') && 
+	    // 	client.getConversationState().interests && (client.getConversationState().interests.count > 0))	{
+	    // 	client.updateConversationState({  new_interests_found: true })
+	    // }
+		    
+	    if(client.getConversationState().interests) {
+		console.log('resetting interests')
+		setClientCache.clearInterests(client)
+	    }
 	    
 	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
 	    if(interest1) { 
@@ -486,7 +520,7 @@ exports.handle = function handle(client) {
 	    //greeting: 'greetingStream',
 	    // goodbye: 'goodbyeStream',
 
-
+	    request_start_over: 'startOver',
 	    ask_trending_book: 'trendingStream',
 	    liked_book: 'similarStream',
 	    // request_for_help: 'helpStream',

@@ -52,7 +52,7 @@ module.exports = {
     recordInterest: function(client, interest) {
 
 	var state = client.getConversationState()
-	if(typeof state.interests == 'undefined') {
+	if( !state.interests || (typeof state.interests == 'undefined')) {
 	 client.updateConversationState({
 	     interests: []
 	 })
@@ -68,11 +68,15 @@ module.exports = {
 	if(interests.indexOf(interest) < 0) {
 	    interests.push(interest)
 	    console.log('updated interests')
-	    
-	    client.updateConversationState({
-		interests: interests
-	    })
+	    client.updateConversationState({ interests: interests })
+	    client.updateConversationState({ new_interests_found: true })
 	}
+    },
+
+    clearInterests: function (client) {
+	
+	//	var interests = client.getConversationState().interests
+	client.updateConversationState({  interests: false })
     },
 
 }
