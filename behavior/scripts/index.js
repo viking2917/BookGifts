@@ -30,6 +30,7 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
+	    client.addTextResponse('sending welcome!')
 	    client.addResponse('app:response:name:welcome')
 	    client.updateConversationState({
 		greetingSent: true
@@ -56,13 +57,13 @@ exports.handle = function handle(client) {
 	prompt() {
 	    let baseClassification = client.getMessagePart().classification.base_type.value
 	    if (baseClassification === 'looking_for_gift') {
-		console('setting')
+		console.log('setting')
 		client.updateConversationState({
 		    isGift: true,
 		})
 		return 'init.proceed' // `next` from this step will get called
 	    } else if (baseClassification === 'looking_for_myself') {
-		console('setting')
+		console.log('setting')
 		client.updateConversationState({
 		    isGift: false,
 		})
@@ -74,7 +75,6 @@ exports.handle = function handle(client) {
 	    // 	client.addResponse('app:response:name:welcome')
 	    // }
 
-	    client.addTextResponse('why not?')
 	    client.addResponse('app:response:name:askgift')
 
 	    // If the next message is a 'decline', like 'don't know'
@@ -415,10 +415,10 @@ exports.handle = function handle(client) {
 	    // goodbye: 'goodbyeStream',
 
 
-	    // ask_trending_book: 'trendingStream',
-	    // liked_book: 'similarStream',
+	    ask_trending_book: 'trendingStream',
+	    liked_book: 'similarStream',
 	    // request_for_help: 'helpStream',
-	    // turing: 'turingStream',
+	    turing: 'turingStream',
 	    // disagree: 'rejectRecoStream',
 	},
 	autoResponses: {

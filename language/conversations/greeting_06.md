@@ -10,7 +10,7 @@ Hi, I'm looking for gift book ideas.
 * welcome
 
 < The person getting the book, what kinds of things are they interested in?
-* ask_liked_book
+* askgift
 
 They liked [Gone with the Wind](BookTitle) by [Frank Herbert](AuthorName)
 * liked_book

@@ -1,0 +1,79 @@
+
+behavior/scripts/index.js,53
+const urlTools 3,14
+const firstOfEntityRole 12,294
+
+behavior/scripts/lib/getSimilar.js,20
+const request 3,14
+
+behavior/scripts/lib/getTrending.js,20
+const request 3,14
+
+behavior/scripts/lib/setClientCache.js,29
+module.exports exports3,14
+
+behavior/scripts/lib/urls.js,65
+function book_url 3,2
+function normalize_string_for_url 13,345
+
+language/conversations/TrendingBook_01.md,41
+< [Game of Thrones](BookTitle) by 9,140
+
+language/conversations/TrendingBook_02.md,47
+< [The Girl on the Train](BookTitle) by 9,126
+
+language/conversations/TrendingBook_03.md,47
+< [The Girl on the Train](BookTitle) by 9,122
+
+language/conversations/TrendingBook_04.md,39
+< All the cool kids are reading 9,135
+
+language/conversations/TrendingBook_05.md,47
+< [The Girl on the Train](BookTitle) by 9,140
+
+language/conversations/TrendingBook_06.md,30
+< [Dune](BookTitle) by 9,127
+
+language/conversations/greeting_01.md,20
+< Nope. But,15,147
+
+language/conversations/greeting_04.md,21
+< Aloha to you,9,94
+
+language/conversations/greeting_05.md,38
+< The person getting the gift,12,145
+
+language/conversations/greeting_06.md,66
+Hi,6,75
+< The person getting the book,12,150
+They liked 15,237
+
+language/conversations/greeting_03.md,0
+
+language/conversations/greeting_02.md,0
+
+language/conversations/greeting_00.md,0
+
+language/conversations/askgift_12.md,0
+
+language/conversations/askgift_11.md,0
+
+language/conversations/askgift_10.md,0
+
+language/conversations/askgift_09.md,0
+
+language/conversations/askgift_08.md,0
+
+language/conversations/askgift_07.md,0
+
+language/conversations/askgift_06.md,0
+
+language/conversations/askgift_05.md,0
+
+language/conversations/askgift_04.md,0
+
+language/conversations/askgift_03.md,0
+
+language/conversations/askgift_02.md,0
+
+language/conversations/askgift_01.md,0

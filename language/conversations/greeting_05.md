@@ -10,6 +10,5 @@ Hi I'm looking for a gift book.
 * welcome
 
 < The person getting the gift, tell me some things they're interested in?
-* gift_interests
-
+* request_interest_list
 
