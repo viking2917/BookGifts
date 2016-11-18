@@ -80,7 +80,13 @@ exports.handle = function handle(client) {
 	    // If the next message is a 'decline', like 'don't know'
 	    // or an 'affirmative', like 'yeah', or 'that's right'
 	    // then the current stream will be returned to
+
+
+	    // maybe need this?
 //	    client.expect(client.getStreamName(), ['looking_for_gift', 'looking_for_myself'])
+
+
+
 	    client.done()
 	}
     })
@@ -435,7 +441,7 @@ exports.handle = function handle(client) {
 	    similarStream: provideSimilarBook,
 	    rejectRecoStream: rejectReco,
 	    helpStream: [provideHelp],
-	    decline: handleGoodbye,
+	    // decline: handleGoodbye,
 	    //main: [askBook],
 	    //onboarding: [sayHello],
 	    
