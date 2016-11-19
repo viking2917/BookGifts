@@ -1,15 +1,18 @@
 ---
-title: greeting_02
-timestamp: 2016-10-19T17:07:48.259701964-04:04
+title: askgift_16
+timestamp: 2016-10-19T17:07:48.259701964-04:05
 ---
 
-Hi
-* greeting
+< Are you looking for a gift or for yourself?
+* askgift
 
-< Aloha Human!
-* welcome
+A gift.
+* looking_for_gift
 
-How do you work?
+< The person receiving the gift, what are a few things they are interested in?
+* request_interest_list
+
+help
 * request_for_help
 
 < I know a fair amount about books and what they are about. You can tell me the name of a book (ideally including the author's name), and I'll tell you about some books that might

@@ -61,7 +61,7 @@ exports.handle = function handle(client) {
 	    client.updateConversationState({ readBooks: []})
 	    console.log(client.getConversationState())
 
-	    client.addTextResponse('OK, let\'s start over')
+	    client.addTextResponse('OK, let\'s start over. I might be confused.')
 	    // client.updateConversationState({state: {}})
 	    return 'init.proceed' // `next` from this step will get called
 	}
@@ -517,11 +517,12 @@ exports.handle = function handle(client) {
 	    // goodbye: 'goodbyeStream',
 
 	    request_start_over: 'startOverStream',
+	    out_of_domain: 'startOverStream',
 	    goodbye: 'startOverStream',
 
 	    ask_trending_book: 'trendingStream',
 	    liked_book: 'similarStream',
-	    // request_for_help: 'helpStream',
+	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
 	    // disagree: 'rejectRecoStream',
 	},
