@@ -4,7 +4,7 @@ const request = require('request')
 
 module.exports = function getBooksInterests(interests, client, next) {
     
-    var url = "http://local.thehawaiiproject.com/get_books_for_categories.php?format=json&whitelabel=0&l=10&o=0&interests="+stringize_interests(interests)
+    var url = "https://www.thehawaiiproject.com/get_books_for_categories.php?format=json&whitelabel=0&l=10&o=0&interests="+stringize_interests(interests)
 
     const requestUrl = 
 	  {
