@@ -200,7 +200,7 @@ exports.handle = function handle(client) {
 		const bookData = {
 		    BookTitle: resultBody.books[0].title,
 		    AuthorName: resultBody.books[0].authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
+		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
 		}
 
 		console.log('sending book data:', bookData)
@@ -252,12 +252,12 @@ exports.handle = function handle(client) {
 		const bookData1 = {
 		    BookTitle: relBook1.title,
 		    AuthorName: relBook1.authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(relBook1.title,relBook1.authorstring,relBook1.bookid),
+		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook1.title,relBook1.authorstring,relBook1.bookid),
 		}
 		const bookData2 = {
 		    BookTitle: relBook2.title,
 		    AuthorName: relBook2.authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url(relBook2.title,relBook2.authorstring,relBook2.bookid),
+		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook2.title,relBook2.authorstring,relBook2.bookid),
 		}
 
 		console.log('sending book data:', bookData1)

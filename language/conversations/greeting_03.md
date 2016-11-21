@@ -11,3 +11,9 @@ Hello
 
 < What have you read recently you liked?
 * ask_liked_book
+
+[The Lean Startup](BookTitle)
+* liked_book
+
+< OK. Maybe check out [Saving Capitalism: For the Many, Not the Few](BookTitle) by [Robert B. Reich](AuthorName)? More: [https://www.thehawaiiproject.com/book/A-Game-of-Thrones--by--George-R.R.-Martin--20623](BookLink)
+* provide_response_recommendation
