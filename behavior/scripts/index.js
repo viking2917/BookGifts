@@ -249,9 +249,11 @@ exports.handle = function handle(client) {
 
 		const relBook1 = resultBody.relatedbooks[0];
 		const relBook2 = resultBody.relatedbooks[1];
+		const relBook3 = resultBody.relatedbooks[2];
 
 		const shortdesc1 = striptags(relBook1.description).substring(0,  50) + "..."
 		const shortdesc2 = striptags(relBook2.description).substring(0, 50) + "..."
+		const shortdesc3 = striptags(relBook3.description).substring(0, 50) + "..."
 
 		console.log(relBook1)
 		const bookData1 = {
@@ -265,11 +267,18 @@ exports.handle = function handle(client) {
 		    AuthorName: relBook2.authorstring,
 		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook2.title,relBook2.authorstring,relBook2.bookid),
 		}
+		const bookData3 = {
+		    BookTitle: relBook3.title,
+		    AuthorName: relBook3.authorstring,
+		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook3.title,relBook3.authorstring,relBook3.bookid),
+		}
 
 		console.log('sending book data:', bookData1)
 		console.log('sending book data:', bookData2)
+		console.log('sending book data:', bookData3)
 		setClientCache.recordBookSent(client, relBook1)
 		setClientCache.recordBookSent(client, relBook2)
+		setClientCache.recordBookSent(client, relBook3)
 		// client.addTextResponse('(I think you said ' + bookTitle + ' by ' + bookAuthor + '.)')
 		client.addTextResponse('(I think you typed a title of <' + bookTitle + '> and an author of <' + bookAuthor + '> so I assume you meant ' + resultBody.title + ' by ' + resultBody.authorstring + '.)')
 		client.addResponse('app:response:name:provide_response_recommendation', bookData1)
@@ -305,6 +314,19 @@ exports.handle = function handle(client) {
 				    type: 'link',
 				    text: 'Amazon',
 				    uri: relBook2.amazonurl,         //  uri: bookData2.BookLink,
+				},
+			    ],
+			},
+			{
+			    'media_url': relBook3.coverarturl,
+			    'media_type': 'image/jpeg', 
+			    'description': shortdesc3,
+			    title: relBook3.title.substring(0,78),
+			    actions: [
+				{
+				    type: 'link',
+				    text: 'Amazon',
+				    uri: relBook3.amazonurl,         //  uri: bookData2.BookLink,
 				},
 			    ],
 			},
