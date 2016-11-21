@@ -394,6 +394,7 @@ exports.handle = function handle(client) {
 
 		    // a nope should generate more recommendations
 		    client.expect('provideBookonInterests', ['decline_recommendation'])
+		    //client.expect('provideSimilarBook', ['liked_book'])
 		    client.done()
 		})
 	    }
