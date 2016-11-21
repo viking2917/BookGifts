@@ -303,7 +303,7 @@ exports.handle = function handle(client) {
 			    actions: [
 				{
 				    type: 'link',
-				    text: 'See More',
+				    text: 'Amazon',
 				    uri: relBook2.amazonurl,         //  uri: bookData2.BookLink,
 				},
 			    ],
@@ -358,10 +358,12 @@ exports.handle = function handle(client) {
 		    const bookData1 = {
 			BookTitle: book1.title, AuthorName: book1.authorstring,
 			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book1.title,book1.authorstring,book1.bookid),
+			AmazonURL: book1.amazonurl
 		    }
 		    const bookData2 = {
 			BookTitle: book2.title, AuthorName: book2.authorstring,
 			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book2.title,book2.authorstring,book2.bookid),
+			AmazonURL: book2.amazonurl
 		    }
 
 		    console.log('sending book data:', bookData1)
@@ -382,8 +384,8 @@ exports.handle = function handle(client) {
 				actions: [
 				    {
 					type: 'link',
-					text: 'Details',
-					uri: bookData1.BookLink,
+					text: 'Amazon',
+					uri: bookData1.AmazonURL,
 				    },
 				],
 			    },
@@ -395,8 +397,8 @@ exports.handle = function handle(client) {
 				actions: [
 				    {
 					type: 'link',
-					text: 'Details',
-					uri: bookData2.BookLink,
+					text: 'Amazon',
+					uri: bookData2.AmazonURL,
 				    },
 				],
 			    },
