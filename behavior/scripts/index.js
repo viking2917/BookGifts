@@ -276,18 +276,18 @@ exports.handle = function handle(client) {
 			    'media_url': relBook1.coverarturl,
 			    'media_type': 'image/jpeg', 
 			    'description': shortdesc1,
-			    title: relBook1.title.substring(0,78),
+			    title: relBook1.title.substring(0,178),
 			    actions: [
 				{
 				    type: 'link',
 				    text: 'Amazon',
 				    uri: relBook1.amazonurl,
 				},
-				{
-				    type: 'link',
-				    text: 'Details',
-				    uri: bookData1.BookLink,
-				},
+				// {
+				//     type: 'link',
+				//     text: 'Details',
+				//     uri: bookData1.BookLink,
+				// },
 			    ],
 			},
 			{
@@ -299,7 +299,7 @@ exports.handle = function handle(client) {
 				{
 				    type: 'link',
 				    text: 'See More',
-				    uri: bookData2.BookLink,
+				    uri: relBook2.amazonurl,         //  uri: bookData2.BookLink,
 				},
 			    ],
 			},
