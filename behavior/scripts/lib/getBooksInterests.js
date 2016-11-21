@@ -26,8 +26,12 @@ module.exports = function getBooksInterests(interests, client, next) {
 	
 	if (body) {
 	    const parsedResult = JSON.parse(body)
+	    
+	    //setClientCache.removeSentBooks(client, parsedResult);
+
 	    console.log(parsedResult.books.length)
-	    var newbooks = [];
+
+	    var newbooks = []
 	    var sentBooks = client.getConversationState().sentBooks
 	    var testBook
 	    for(var i=0; i<parsedResult.books.length; i++) {

@@ -6,7 +6,7 @@ module.exports = function getTrending(next) {
 
     const requestUrl = 
 	  {
-	      uri: "http://www.thehawaiiproject.com/get_books_for_categories.php?format=json&whitelabel=0&l=2&o=0&categories=trending-books",
+	      uri: "http://www.thehawaiiproject.com/get_books_for_categories.php?format=json&whitelabel=0&l=10&o=0&categories=trending-books",
 	      method: "GET",
 	      timeout: 30000,
 	      followRedirect: true,
@@ -23,7 +23,8 @@ module.exports = function getTrending(next) {
 	}
 	
 	if (body) {
-	    const parsedResult = JSON.parse(body)
+	    var parsedResult = JSON.parse(body)
+
 	    // console.log(parsedResult)
 	    next(parsedResult)
 	} else {

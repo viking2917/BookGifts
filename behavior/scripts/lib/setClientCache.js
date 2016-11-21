@@ -79,4 +79,28 @@ module.exports = {
 	client.updateConversationState({  interests: false })
     },
 
+    removeSentBooks: function (client, parsedResult) {
+	
+	console.log(parsedResult.books.length)
+	
+	var newbooks = []
+	var sentBooks = client.getConversationState().sentBooks
+	var testBook
+	for(var i=0; i<parsedResult.books.length; i++) {
+	    testBook = parsedResult.books[i]
+	    if(sentBooks.indexOf(testBook.bookid) < 0) {
+		console.log(testBook.bookid + ' not in sent books, sending')
+		newbooks.push(testBook)
+	    }
+	    else {
+		console.log(testBook.bookid + ' in sent books, dropping')
+	    }
+	}
+	
+	parsedResult.books = newbooks;
+	//	var interests = client.getConversationState().interests
+	//client.updateConversationState({  interests: false })
+	return parsedResult
+    },
+
 }

@@ -190,12 +190,14 @@ exports.handle = function handle(client) {
 	},
 
 	prompt(callback) {
-	    getTrending(resultBody => {
+	    getTrending( (resultBody) => {
 		if (!resultBody) {
 		    console.log('Error getting trending book.')
 		    callback()
 		    return
 		}
+
+		setClientCache.removeSentBooks(client, resultBody);
 
 		const bookData = {
 		    BookTitle: resultBody.books[0].title,
@@ -205,6 +207,7 @@ exports.handle = function handle(client) {
 
 		console.log('sending book data:', bookData)
 		setClientCache.recordBookSent(client, resultBody.books[0])
+
 		client.addResponse('app:response:name:provide_popular_book', bookData)
 		// client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
 		client.done()
@@ -222,13 +225,15 @@ exports.handle = function handle(client) {
 	    console.log('extracting slots')
 
 	    var bookTitle = firstOfEntityRole(client.getMessagePart(), 'booktitle')
-	    if(!bookTitle) bookTitle = ""
+	    if(!bookTitle) bookTitle = client.getMessagePart().content
 	    else bookTitle = bookTitle.value
 	    console.log('Title: ' + bookTitle)
 	    var bookAuthor = firstOfEntityRole(client.getMessagePart(), 'authorname')
 	    if(!bookAuthor) bookAuthor = ""
 	    else bookAuthor = bookAuthor.value
 	    console.log('Author: ' + bookAuthor)
+	    
+	    //console.log(client.getMessagePart())
 
 	    getSimilar(bookTitle, bookAuthor, resultBody => {
 		if (!resultBody) {
@@ -276,7 +281,7 @@ exports.handle = function handle(client) {
 			    'media_url': relBook1.coverarturl,
 			    'media_type': 'image/jpeg', 
 			    'description': shortdesc1,
-			    title: relBook1.title.substring(0,178),
+			    title: relBook1.title.substring(0,78),
 			    actions: [
 				{
 				    type: 'link',
