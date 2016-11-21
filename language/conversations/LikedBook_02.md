@@ -8,3 +8,9 @@ timestamp: 2016-10-26T12:38:26.191962593-04:00
 
 < Nice. Then how about [The Story of O](BookTitle) by [Pauline Reage](AuthorName)? More: [https://www.thehawaiiproject.com/book/Gone-Firl--by--Fred-Flintstone--20623](BookLink)
 * provide_response_recommendation
+
+How about [Rework](BookTitle)
+* liked_book
+
+< Let's see.... how about [One Flew over the Cuckoo's Nest](BookTitle) by [Foo Bar](AuthorName)? More: [https://www.thehawaiiproject.com/book/Gone-Firl--by--Fred-Flintstone--20623](BookLink)
+* provide_response_recommendation
