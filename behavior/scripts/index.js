@@ -232,7 +232,7 @@ exports.handle = function handle(client) {
 
 	    getSimilar(bookTitle, bookAuthor, resultBody => {
 		if (!resultBody) {
-		    console.log('Error getting trending book.')
+		    console.log('Error getting a similar book.')
 		    client.addResponse('app:response:name:apology/untrained')
 		    client.done()
 		    callback()
