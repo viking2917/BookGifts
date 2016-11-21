@@ -253,6 +253,7 @@ exports.handle = function handle(client) {
 		    BookTitle: relBook1.title,
 		    AuthorName: relBook1.authorstring,
 		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook1.title,relBook1.authorstring,relBook1.bookid),
+		    AmazonURL: relBook1.amazonurl,
 		}
 		const bookData2 = {
 		    BookTitle: relBook2.title,
@@ -279,7 +280,12 @@ exports.handle = function handle(client) {
 			    actions: [
 				{
 				    type: 'link',
-				    text: 'See More',
+				    text: 'Amazon',
+				    uri: relBook1.amazonurl,
+				},
+				{
+				    type: 'link',
+				    text: 'Details',
 				    uri: bookData1.BookLink,
 				},
 			    ],
@@ -540,11 +546,9 @@ exports.handle = function handle(client) {
 	    provideBookonInterests: [provideBookonInterests],
 
 	    // greetingStream: [askIfGift, collectInterests],
-	    startOverStream: startOver,
-	    goodbyeStream: handleGoodbye,
 	    turingStream: handleTuring,
-	    trendingStream: provideTrendingBook,
 	    similarStream: provideSimilarBook,
+	    trendingStream: provideTrendingBook,
 	    rejectRecoStream: rejectReco,
 	    helpStream: [provideHelp],
 	    // decline: handleGoodbye,
@@ -552,6 +556,9 @@ exports.handle = function handle(client) {
 	    //onboarding: [sayHello],
 	    
 	    // end: [untrained],
+	    goodbyeStream: handleGoodbye,
+
+	    startOverStream: startOver,
 	    end: [provideHelp],
 	}
     })
