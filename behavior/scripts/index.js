@@ -374,8 +374,10 @@ exports.handle = function handle(client) {
 		    const theBook = resultBody;
 		    const book1 = resultBody.books[0];
 		    const book2 = resultBody.books[1];
+		    const book3 = resultBody.books[2];
 		    const shortdesc1 = striptags(book1.description).substring(0, 50) + "..."
 		    const shortdesc2 = striptags(book2.description).substring(0, 50) + "..."
+		    const shortdesc3 = striptags(book3.description).substring(0, 50) + "..."
 
 		    const bookData1 = {
 			BookTitle: book1.title, AuthorName: book1.authorstring,
@@ -387,11 +389,18 @@ exports.handle = function handle(client) {
 			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book2.title,book2.authorstring,book2.bookid),
 			AmazonURL: book2.amazonurl
 		    }
+		    const bookData3 = {
+			BookTitle: book3.title, AuthorName: book3.authorstring,
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book3.title,book3.authorstring,book3.bookid),
+			AmazonURL: book3.amazonurl
+		    }
 
 		    console.log('sending book data:', bookData1)
 		    console.log('sending book data:', bookData2)
+		    console.log('sending book data:', bookData3)
 		    setClientCache.recordBookSent(client, book1)
 		    setClientCache.recordBookSent(client, book2)
+		    setClientCache.recordBookSent(client, book3)
 		    client.addResponse('app:response:name:provide_response_recommendation', bookData1)
 
 		    client.addTextResponse(bookData1.BookTitle + ' and some other choices:')
@@ -421,6 +430,19 @@ exports.handle = function handle(client) {
 					type: 'link',
 					text: 'Amazon',
 					uri: bookData2.AmazonURL,
+				    },
+				],
+			    },
+			    {
+				'media_url': book3.coverarturl,
+				'media_type': 'image/jpeg', 
+				'description': shortdesc3,
+				title: book3.title.substring(0,78),
+				actions: [
+				    {
+					type: 'link',
+					text: 'Amazon',
+					uri: bookData3.AmazonURL,
 				    },
 				],
 			    },
