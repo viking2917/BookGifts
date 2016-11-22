@@ -26,26 +26,6 @@ module.exports = function getBooksInterests(interests, client, next) {
 	
 	if (body) {
 	    const parsedResult = JSON.parse(body)
-	    
-	    //setClientCache.removeSentBooks(client, parsedResult);
-
-	    console.log(parsedResult.books.length)
-
-	    var newbooks = []
-	    var sentBooks = client.getConversationState().sentBooks
-	    var testBook
-	    for(var i=0; i<parsedResult.books.length; i++) {
-		testBook = parsedResult.books[i]
-		if(sentBooks.indexOf(testBook.bookid) < 0) {
-		    console.log(testBook.bookid + ' not in sent books, sending')
-		    newbooks.push(testBook)
-		}
-		else {
-		    console.log(testBook.bookid + ' in sent books, dropping')
-		}
-	    }
-
-	    parsedResult.books = newbooks;
 	    next(parsedResult)
 	} else {
 	    next()

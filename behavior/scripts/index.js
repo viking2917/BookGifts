@@ -5,8 +5,8 @@ const getTrending = require('./lib/getTrending')
 const getSimilar = require('./lib/getSimilar')
 const getBooksInterests = require('./lib/getBooksInterests')
 const setClientCache = require('./lib/setClientCache')
-
-var striptags = require('striptags');
+const carousel = require('./lib/carousel')
+var striptags = require('striptags')
 
 // process._debugProcess(process.pid); debugger;
 
@@ -199,19 +199,24 @@ exports.handle = function handle(client) {
 
 		setClientCache.removeSentBooks(client, resultBody);
 
-		const bookData = {
-		    BookTitle: resultBody.books[0].title,
-		    AuthorName: resultBody.books[0].authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
+		if(resultBody.books && !(resultBody.books.length>0) ) {	
+		    client.addTextResponse('I seem to be out of books on that topic. Can you try something else?')
 		}
-
-		console.log('sending book data:', bookData)
-		setClientCache.recordBookSent(client, resultBody.books[0])
-
-		client.addResponse('app:response:name:provide_popular_book', bookData)
-		// client.addImageResponse( resultBody.books[0].coverarturl, 'The product')
+		else {
+		    const bookData = {
+			BookTitle: resultBody.books[0].title,
+			AuthorName: resultBody.books[0].authorstring,
+			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
+		    }
+		    
+		    console.log('sending book data:', bookData)
+		    setClientCache.recordBookSent(client, resultBody.books[0])
+		    client.addResponse('app:response:name:provide_popular_book', bookData)
+		    carousel.addCarousel(client, resultBody.books, 3, '')
+		}
 		client.done()
 		callback()
+
 	    })
 	},
     })
@@ -233,8 +238,6 @@ exports.handle = function handle(client) {
 	    else bookAuthor = bookAuthor.value
 	    console.log('Author: ' + bookAuthor)
 	    
-	    //console.log(client.getMessagePart())
-
 	    getSimilar(bookTitle, bookAuthor, resultBody => {
 		if (!resultBody) {
 		    console.log('Error getting a similar book.')
@@ -244,96 +247,9 @@ exports.handle = function handle(client) {
 		    return
 		}
 
-		const theBook = resultBody;
-		setClientCache.recordBookRead(client, theBook)
 
-		const relBook1 = resultBody.relatedbooks[0];
-		const relBook2 = resultBody.relatedbooks[1];
-		const relBook3 = resultBody.relatedbooks[2];
-
-		const shortdesc1 = striptags(relBook1.description).substring(0,  50) + "..."
-		const shortdesc2 = striptags(relBook2.description).substring(0, 50) + "..."
-		const shortdesc3 = striptags(relBook3.description).substring(0, 50) + "..."
-
-		console.log(relBook1)
-		const bookData1 = {
-		    BookTitle: relBook1.title,
-		    AuthorName: relBook1.authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook1.title,relBook1.authorstring,relBook1.bookid),
-		    AmazonURL: relBook1.amazonurl,
-		}
-		const bookData2 = {
-		    BookTitle: relBook2.title,
-		    AuthorName: relBook2.authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook2.title,relBook2.authorstring,relBook2.bookid),
-		}
-		const bookData3 = {
-		    BookTitle: relBook3.title,
-		    AuthorName: relBook3.authorstring,
-		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(relBook3.title,relBook3.authorstring,relBook3.bookid),
-		}
-
-		console.log('sending book data:', bookData1)
-		console.log('sending book data:', bookData2)
-		console.log('sending book data:', bookData3)
-		setClientCache.recordBookSent(client, relBook1)
-		setClientCache.recordBookSent(client, relBook2)
-		setClientCache.recordBookSent(client, relBook3)
-		// client.addTextResponse('(I think you said ' + bookTitle + ' by ' + bookAuthor + '.)')
 		client.addTextResponse('(I think you typed a title of <' + bookTitle + '> and an author of <' + bookAuthor + '> so I assume you meant ' + resultBody.title + ' by ' + resultBody.authorstring + '.)')
-		client.addResponse('app:response:name:provide_response_recommendation', bookData1)
-		// client.addImageResponse( relBook1.coverarturl, 'The product')
-
-		client.addCarouselListResponse({
-		    items: [
-			{
-			    'media_url': relBook1.coverarturl,
-			    'media_type': 'image/jpeg', 
-			    'description': shortdesc1,
-			    title: relBook1.title.substring(0,78),
-			    actions: [
-				{
-				    type: 'link',
-				    text: 'Amazon',
-				    uri: relBook1.amazonurl,
-				},
-				// {
-				//     type: 'link',
-				//     text: 'Details',
-				//     uri: bookData1.BookLink,
-				// },
-			    ],
-			},
-			{
-			    'media_url': relBook2.coverarturl,
-			    'media_type': 'image/jpeg', 
-			    'description': shortdesc2,
-			    title: relBook2.title.substring(0,78),
-			    actions: [
-				{
-				    type: 'link',
-				    text: 'Amazon',
-				    uri: relBook2.amazonurl,         //  uri: bookData2.BookLink,
-				},
-			    ],
-			},
-			{
-			    'media_url': relBook3.coverarturl,
-			    'media_type': 'image/jpeg', 
-			    'description': shortdesc3,
-			    title: relBook3.title.substring(0,78),
-			    actions: [
-				{
-				    type: 'link',
-				    text: 'Amazon',
-				    uri: relBook3.amazonurl,         //  uri: bookData2.BookLink,
-				},
-			    ],
-			},
-		    ],
-		})
-
-
+		carousel.addCarousel(client, resultBody.relatedbooks, 3, 'Some books related to ' + resultBody.title + ' you may enjoy:' )
 		client.done()
 		callback()
 	    })
@@ -353,105 +269,29 @@ exports.handle = function handle(client) {
 	    console.log(interests)
 
 	    if(interests) {
-		var response = '(Looking for books about '
-		// clean this up.
-		for(var i=0; i<interests.length; i++) {
-		    console.log('interest ' + i + ': ' + interests[i]);
-		    response += '<' + interests[i] + '>, '
+		var interests2 = interests.slice();
+		for(var i=0; i<interests2.length; i++) {
+		    interests2[i] = '<' + interests2[i] + '>'
 		}
-
+		var interestsstring = interests2.join(",")
+		var response = '(Looking for books about ' + interestsstring + "."
 		client.addTextResponse(response)
 
 		getBooksInterests(interests, client, resultBody => {
 		    if (!resultBody) {
-			console.log('Error getting trending book.')
+			console.log('Error getting books on interests.')
 			client.addResponse('app:response:name:apology/untrained')
 			client.done()
 			callback()
 			return
 		    }
-
-		    const theBook = resultBody;
-		    const book1 = resultBody.books[0];
-		    const book2 = resultBody.books[1];
-		    const book3 = resultBody.books[2];
-		    const shortdesc1 = striptags(book1.description).substring(0, 50) + "..."
-		    const shortdesc2 = striptags(book2.description).substring(0, 50) + "..."
-		    const shortdesc3 = striptags(book3.description).substring(0, 50) + "..."
-
-		    const bookData1 = {
-			BookTitle: book1.title, AuthorName: book1.authorstring,
-			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book1.title,book1.authorstring,book1.bookid),
-			AmazonURL: book1.amazonurl
-		    }
-		    const bookData2 = {
-			BookTitle: book2.title, AuthorName: book2.authorstring,
-			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book2.title,book2.authorstring,book2.bookid),
-			AmazonURL: book2.amazonurl
-		    }
-		    const bookData3 = {
-			BookTitle: book3.title, AuthorName: book3.authorstring,
-			BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(book3.title,book3.authorstring,book3.bookid),
-			AmazonURL: book3.amazonurl
-		    }
-
-		    console.log('sending book data:', bookData1)
-		    console.log('sending book data:', bookData2)
-		    console.log('sending book data:', bookData3)
-		    setClientCache.recordBookSent(client, book1)
-		    setClientCache.recordBookSent(client, book2)
-		    setClientCache.recordBookSent(client, book3)
-		    client.addResponse('app:response:name:provide_response_recommendation', bookData1)
-
-		    client.addTextResponse(bookData1.BookTitle + ' and some other choices:')
-
-		    client.addCarouselListResponse({
-			items: [
-			    {
-				'media_url': book1.coverarturl,
-				'media_type': 'image/jpeg', 
-				'description': shortdesc1,
-				title: book1.title.substring(0,78),
-				actions: [
-				    {
-					type: 'link',
-					text: 'Amazon',
-					uri: bookData1.AmazonURL,
-				    },
-				],
-			    },
-			    {
-				'media_url': book2.coverarturl,
-				'media_type': 'image/jpeg', 
-				'description': shortdesc2,
-				title: book2.title.substring(0,78),
-				actions: [
-				    {
-					type: 'link',
-					text: 'Amazon',
-					uri: bookData2.AmazonURL,
-				    },
-				],
-			    },
-			    {
-				'media_url': book3.coverarturl,
-				'media_type': 'image/jpeg', 
-				'description': shortdesc3,
-				title: book3.title.substring(0,78),
-				actions: [
-				    {
-					type: 'link',
-					text: 'Amazon',
-					uri: bookData3.AmazonURL,
-				    },
-				],
-			    },
-			],
-		    })
-
-		    // a nope should generate more recommendations
+		    
+		    setClientCache.removeSentBooks(client, resultBody)
+		    carousel.addCarousel(client, resultBody.books, 3, '')
 		    client.expect('provideBookonInterests', ['decline_recommendation'])
+		    // a nope should generate more recommendations
 		    //client.expect('provideSimilarBook', ['liked_book'])
+
 		    client.done()
 		})
 	    }
@@ -464,17 +304,12 @@ exports.handle = function handle(client) {
 	},
 	
 	prompt() {
-
-	    // if(!Boolean(client.getConversationState().greetingSent)){
-	    // 	client.addResponse('app:response:name:welcome')
-	    // }
 	    client.addResponse('app:response:name:ask_liked_book')
 	    // client.expect('liked_book', ['decline', 'similar1'])  // these are streams, not message classifications.
 	    client.done()
 	}
     })
     
-
     const collectInterests = client.createStep({
 	satisfied() {
 
