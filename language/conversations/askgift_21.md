@@ -1,6 +1,6 @@
 ---
-title: askgift_15
-timestamp: 2016-10-19T17:07:48.259701964-04:05
+title: askgift_18
+timestamp: 2016-10-19T17:07:48.259701964-03:08
 ---
 
 < Are you looking for a gift or for yourself?
@@ -12,11 +12,11 @@ A gift.
 < The person receiving the gift, what are a few things they are interested in?
 * request_interest_list
 
-He likes [rugby](Interest1)
+he likes [James Bond](Interest1)
 * provide_interest_list
 
 < Gotcha. How about [The Girl with the Dragon Tattoo: A new series ](BookTitle) by [Stieg Larsson ](AuthorName)? More: [https://www.thehawaiiproject.com/book/A-Game-of-Thrones--by--George-R.R.-Martin--20623](BookLink)
 * provide_response_recommendation
 
-Something else
+no
 * decline_recommendation
