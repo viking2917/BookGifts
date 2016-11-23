@@ -329,7 +329,8 @@ exports.handle = function handle(client) {
 	},
 
 	extractInfo() {
-	    console.log('extracting interests')
+	    console.log('extracting interests from:')
+	    console.log(client.getMessagePart().content)
 	    
 	    // are there pre-existing interests? If so record that so we don't satisfy this step
 	    client.updateConversationState({  new_interests_found: false })
