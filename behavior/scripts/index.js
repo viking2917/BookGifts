@@ -54,11 +54,12 @@ exports.handle = function handle(client) {
 
 	prompt() {
 	    console.log('starting over')
-	    client.updateConversationState({ isGift: -1})
-	    client.updateConversationState({ greetingSent: true })
-	    client.updateConversationState({ interests: []})
-	    client.updateConversationState({ sentBooks: []})
-	    client.updateConversationState({ readBooks: []})
+	    client.resetConversationState()
+	    // client.updateConversationState({ isGift: -1})
+	    // client.updateConversationState({ greetingSent: true })
+	    // client.updateConversationState({ interests: []})
+	    // client.updateConversationState({ sentBooks: []})
+	    // client.updateConversationState({ readBooks: []})
 	    console.log(client.getConversationState())
 
 	    client.addTextResponse('OK, let\'s start over. I might be confused.')

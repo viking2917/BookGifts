@@ -9,9 +9,9 @@
   "author": "<my-name> <<my-email-address>>",
   "license": "UNLICENSED",
   "dependencies": {
-      "initai-dev-server": "^0.4.8",
-      "initai-node": "~0.0.6",
-      "request": "^2.76.0",
-      "striptags": "^2.1.1"
+    "initai-dev-server": "^0.4.8",
+    "initai-node": "~0.0.6",
+    "request": "^2.76.0",
+    "striptags": "^2.1.1"
   }
 }
