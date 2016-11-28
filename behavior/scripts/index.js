@@ -4,6 +4,7 @@ const urlTools = require('./lib/urls')
 const getTrending = require('./lib/getTrending')
 const getSimilar = require('./lib/getSimilar')
 const getBooksInterests = require('./lib/getBooksInterests')
+const getBooksAuthor = require('./lib/getBooksAuthors')
 const setClientCache = require('./lib/setClientCache')
 const carousel = require('./lib/carousel')
 var striptags = require('striptags')
@@ -180,7 +181,7 @@ exports.handle = function handle(client) {
 	},
 
 	prompt() {
-	    client.addTextResponse('Mahalo and Aloha til next time!')
+	    client.addTextResponse('OK Signing off... Aloha til next time!')
 	    client.done()
 	}
     })
@@ -268,7 +269,7 @@ exports.handle = function handle(client) {
 	    author = author ? author.value : ""
 	    console.log('Author: ' + author)
 	    
-	    getBooksAuthor(bookTitle, bookAuthor, resultBody => {
+	    getBooksAuthor(bookAuthor, resultBody => {
 		if (!resultBody) {
 		    console.log('Error getting a similar book.')
 		    client.addResponse('app:response:name:apology/untrained')
