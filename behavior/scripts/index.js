@@ -257,6 +257,42 @@ exports.handle = function handle(client) {
 	},
     })
 
+   const provideAuthorBook = client.createStep({
+	satisfied() {
+	    return false
+	},
+
+	prompt(callback) {
+	    console.log('extracting slots')
+	    var author = firstOfEntityRole(client.getMessagePart(), 'authorname')
+	    author = author ? author.value : ""
+	    console.log('Author: ' + author)
+	    
+	    getBooksAuthor(bookTitle, bookAuthor, resultBody => {
+		if (!resultBody) {
+		    console.log('Error getting a similar book.')
+		    client.addResponse('app:response:name:apology/untrained')
+		    client.done()
+		    callback()
+		    return
+		}
+
+		const bookData = {
+		    BookTitle: resultBody.books[0].title,
+		    AuthorName: resultBody.books[0].authorstring,
+		    BookLink: 'https://www.thehawaiiproject.com/' + urlTools.book_url_short(resultBody.books[0].title,resultBody.books[0].authorstring,resultBody.books[0].bookid),
+		}
+		
+		console.log('sending book data:', bookData)
+		setClientCache.recordBookSent(client, resultBody.books[0])
+		client.addResponse('app:response:name:provide_author_book', bookData)
+		carousel.addCarousel(client, resultBody.books, 3, 'Other books by ' + AuthorName + ':')
+		client.done()
+		callback()
+	    })
+	},
+    })
+
     const provideBookonInterests = client.createStep({
 	satisfied() {
 	    return false
@@ -409,14 +445,15 @@ exports.handle = function handle(client) {
 	classifications: {
 	    // map inbound message  classifications to names of streams
 	    //greeting: 'greetingStream',
-	    // goodbye: 'goodbyeStream',
+	    goodbye: 'goodbyeStream',
 
 	    request_start_over: 'startOverStream',
 	    out_of_domain: 'startOverStream',
-	    goodbye: 'startOverStream',
+	    // goodbye: 'startOverStream',
 
 	    ask_trending_book: 'trendingStream',
 	    liked_book: 'similarStream',
+	    likes_author: 'provideAuthorBookStream',
 	    request_for_help: 'helpStream',
 	    turing: 'turingStream',
 	    // disagree: 'rejectRecoStream',
@@ -432,6 +469,7 @@ exports.handle = function handle(client) {
 	    gift: [collectInterests],
 	    personal: [askBook],
 	    provideBookonInterests: [provideBookonInterests],
+	    provideAuthorBookStream: [provideAuthorBook],
 
 	    // greetingStream: [askIfGift, collectInterests],
 	    turingStream: handleTuring,

@@ -10,7 +10,7 @@ Hi
 * welcome
 
 Goodbye
-* thanks
+* goodbye
 
-< Mahalo
+< Mahalo (that's Hawaiian for Thank You!)
 * thanks

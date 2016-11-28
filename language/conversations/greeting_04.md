@@ -8,3 +8,6 @@ Aloha!
 
 < Aloha to you, Human!
 * welcome
+
+yepp , thank you!
+* goodbye
