@@ -1,6 +1,6 @@
 ---
 title: LikedBook_19a
-timestamp: 2016-10-26T12:33:57.231949213-11::04
+timestamp: 2016-10-26T12:33:57.231949213-11:04
 ---
 
 [Divergent](BookTitle)
