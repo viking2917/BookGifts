@@ -269,7 +269,7 @@ exports.handle = function handle(client) {
 	    author = author ? author.value : ""
 	    console.log('Author: ' + author)
 	    
-	    getBooksAuthor(bookAuthor, resultBody => {
+	    getBooksAuthor(author, client, resultBody => {
 		if (!resultBody) {
 		    console.log('Error getting a similar book.')
 		    client.addResponse('app:response:name:apology/untrained')
@@ -277,6 +277,8 @@ exports.handle = function handle(client) {
 		    callback()
 		    return
 		}
+
+		console.log(resultBody.books[0])
 
 		const bookData = {
 		    BookTitle: resultBody.books[0].title,
@@ -287,7 +289,7 @@ exports.handle = function handle(client) {
 		console.log('sending book data:', bookData)
 		setClientCache.recordBookSent(client, resultBody.books[0])
 		client.addResponse('app:response:name:provide_author_book', bookData)
-		carousel.addCarousel(client, resultBody.books, 3, 'Other books by ' + AuthorName + ':')
+		carousel.addCarousel(client, resultBody.books, 3, 'Other books by ' + bookData.AuthorName + ':')
 		client.done()
 		callback()
 	    })
