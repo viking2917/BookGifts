@@ -384,6 +384,7 @@ exports.handle = function handle(client) {
 	    var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
 	    var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
 	    console.log(interest1); console.log(interest2);console.log(interest3);
+	    console.log(client.getMessagePart());
 
 	    // this step is re-entrant. if they ask for more recommendations, don't flush the interest set unless we find new ones.
 	    if(client.getConversationState().interests && (interest1||interest2||interest3)) {
