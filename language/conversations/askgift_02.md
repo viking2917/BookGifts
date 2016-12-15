@@ -12,7 +12,7 @@ I'm looking for a gift
 < What kinds of things are they interested in?
 * request_interest_list
 
-[quilting] (Interest1) and [travel](Interest2)
+[quilting](Interest1) and [travel](Interest2)
 * provide_interest_list
 
 < Cool. How about [Stranger in a  Strange Land](BookTitle) by [Heinlein](AuthorName)? More: [https://www.thehawaiiproject.com/book/A-Game-of-Thrones--by--George-R.R.-Martin--20623](BookLink)
