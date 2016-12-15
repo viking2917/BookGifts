@@ -14,6 +14,8 @@ var striptags = require('striptags')
 const firstOfEntityRole = function(message, entity, role) {
     role = role || 'generic';
     const slots = message.slots
+    console.log('slots:'); 
+    console.log(slots);
     const entityValues = message.slots[entity]
     const valsForRole = entityValues ? entityValues.values_by_role[role] : null
 
@@ -381,13 +383,20 @@ exports.handle = function handle(client) {
 	    var interest1 = firstOfEntityRole(client.getMessagePart(), 'interest1')
 	    var interest2 = firstOfEntityRole(client.getMessagePart(), 'interest2')
 	    var interest3 = firstOfEntityRole(client.getMessagePart(), 'interest3')
+	    console.log(interest1); console.log(interest2);console.log(interest3);
 
 	    // this step is re-entrant. if they ask for more recommendations, don't flush the interest set unless we find new ones.
 	    if(client.getConversationState().interests && (interest1||interest2||interest3)) {
 		console.log('resetting interests')
 		setClientCache.clearInterests(client)
 	    }
-	    
+	    // else { // there's no interests. but it thinks is an interests answer. if it's short, take it as the interest.
+	    // 	if(client.getMessagePart().content && ( (client.getMessagePart().content.match(/ /g)||[]).length <= 2 ) ) {
+	    // 	    console.log('had to extrapolate interest1 as: ' + client.getMessagePart().content)
+	    // 	    setClientCache.recordInterest(client, client.getMessagePart().content)
+	    // 	}
+	    // }
+
 	    if(interest1) { 
 		interest1 = interest1.value
 		console.log('interest1: ' + interest1)
