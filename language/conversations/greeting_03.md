@@ -9,7 +9,7 @@ Hello
 < Aloha Human!
 * welcome
 
-< What have you read recently you liked?
+< Tell me a book you read recently you like?
 * ask_liked_book
 
 [The Lean Startup](BookTitle)

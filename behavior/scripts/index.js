@@ -386,17 +386,24 @@ exports.handle = function handle(client) {
 	    console.log(interest1); console.log(interest2);console.log(interest3);
 	    console.log(client.getMessagePart());
 
+	    let baseClassification = client.getMessagePart().classification.base_type.value
+
 	    // this step is re-entrant. if they ask for more recommendations, don't flush the interest set unless we find new ones.
 	    if(client.getConversationState().interests && (interest1||interest2||interest3)) {
 		console.log('resetting interests')
 		setClientCache.clearInterests(client)
 	    }
-	    // else { // there's no interests. but it thinks is an interests answer. if it's short, take it as the interest.
-	    // 	if(client.getMessagePart().content && ( (client.getMessagePart().content.match(/ /g)||[]).length <= 2 ) ) {
-	    // 	    console.log('had to extrapolate interest1 as: ' + client.getMessagePart().content)
-	    // 	    setClientCache.recordInterest(client, client.getMessagePart().content)
-	    // 	}
-	    // }
+	    else { // there's no interests. but it thinks is an interests answer. if it's short, take it as the interest.
+	    	if((baseClassification === 'provide_interest_list') &&
+		   client.getMessagePart().content &&
+		   ( (client.getMessagePart().content.match(/ /g)||[]).length <= 3 ) ) {
+		    console.log('resetting interests')
+		    setClientCache.clearInterests(client)
+	    	    console.log('had to extrapolate interest1 as: ' + client.getMessagePart().content)
+		    client.addTextResponse('Interpolating interests')
+	    	    setClientCache.recordInterest(client, client.getMessagePart().content)
+	    	}
+	    }
 
 	    if(interest1) { 
 		interest1 = interest1.value
